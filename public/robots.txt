@@ -1,0 +1,20 @@
+# Muzika Distribution Platform
+# Music distribution platform for artists and labels
+
+User-agent: *
+Allow: /
+
+# Disallow admin and API endpoints
+Disallow: /api/
+Disallow: /admin
+
+# Allow search engines to index public pages
+Allow: /$
+Allow: /catalog
+Allow: /releases
+
+# Crawl delay for polite crawling
+Crawl-delay: 1
+
+# Sitemap location (to be added in future)
+# Sitemap: https://muzika-distribution.com/sitemap.xml
