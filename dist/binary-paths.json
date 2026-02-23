@@ -1,0 +1,6 @@
+{
+  "chromiumPath": "/nix/store/884ygjschxqkrkpkrhq83bicvzgj7vb8-chromium-unwrapped-138.0.7204.100/libexec/chromium/chromium",
+  "chromiumLdLibraryPath": "/nix/store/2pnsbkhxzwwhzncz5i74714f69yzqqai-libva-2.22.0/lib:/nix/store/ap3284zdwi033wsmc0wcp8ww2gf3bmha-pipewire-1.4.5/lib:/nix/store/60lzwimi95ls10zwqxpb6ngzax1z7s9a-wayland-1.23.1/lib:/nix/store/6x7s7vfydrik42pk4599sm1jcqxmi1qp-gtk+3-3.24.49/lib:/nix/store/hlnqqm17pj6js5c6sd5gb8a9nkhxjcr5-gtk4-4.18.6/lib:/nix/store/h2l1ivmfpsm9q573q4ah5wxp33q01lv9-krb5-1.21.3-lib/lib:",
+  "ffmpegPath": "/home/runner/workspace/node_modules/ffmpeg-static/ffmpeg",
+  "chromiumWrapperPath": "/nix/store/qa9cnw4v5xkxyip6mb9kxqfq1z4x2dx1-chromium-138.0.7204.100/bin/chromium"
+}

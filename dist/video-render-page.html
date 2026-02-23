@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: transparent; overflow: hidden; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body, * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+#canvas {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-blurred {
+  position: absolute;
+  inset: 0;
+}
+.bg-blurred img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(40px) brightness(0.4) saturate(1.5);
+  transform: scale(1.3);
+}
+
+.glow-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4%;
+}
+
+.cover-wrapper {
+  position: relative;
+}
+
+.cover-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px) brightness(0.8) saturate(2);
+  transform: scale(1.3);
+  opacity: 0.7;
+}
+
+.cover-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.player-widget {
+  position: relative;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3% 5%;
+}
+
+.player-artist {
+  font-weight: 700;
+  text-align: center;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.player-track {
+  text-align: center;
+  color: white;
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.progress-bar {
+  width: 100%;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.3);
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  border-radius: 9999px;
+  background: white;
+  height: 100%;
+  width: 0%;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 8%;
+  margin-top: 4px;
+  color: white;
+}
+.player-controls span { opacity: 0.6; }
+.player-controls .play-btn { opacity: 1; }
+
+.promo-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.promo-container.promo-landscape {
+  flex-direction: row;
+  align-items: center;
+  padding: 6%;
+}
+
+.promo-cover-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5%;
+}
+
+.promo-landscape .promo-cover-area {
+  flex: none;
+  padding: 0;
+  position: relative;
+}
+
+.promo-cover-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  filter: blur(30px) brightness(0.7) saturate(2);
+  transform: scale(1.25);
+  opacity: 0.6;
+  background-size: cover;
+  background-position: center;
+}
+
+.promo-cover-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+}
+
+.promo-landscape .promo-cover-image {
+  position: relative;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.promo-text {
+  padding: 0 6% 6%;
+}
+
+.promo-landscape .promo-text {
+  padding: 0;
+  padding-left: 5%;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.promo-tagline {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  opacity: 0.9;
+}
+
+.promo-title {
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.promo-stores {
+  padding: 0 6% 5%;
+  display: flex;
+  align-items: center;
+  gap: 3%;
+}
+
+.promo-landscape .promo-stores {
+  padding: 0;
+  padding-left: 5%;
+  margin-top: 4%;
+}
+
+.store-icon {
+  opacity: 0.8;
+  display: inline-block;
+}
+
+.store-icon svg {
+  fill: currentColor;
+  width: 100%;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="canvas"></div>
+<script>
+const STORE_SVGS = {
+  spotify: '<svg viewBox="0 0 496 512"><path d="M248 8C111.1 8 0 119.1 0 256s111.1 248 248 248 248-111.1 248-248S384.9 8 248 8zm100.7 364.9c-4.2 0-6.8-1.3-10.7-3.6-62.4-37.6-135-39.2-206.7-24.5-3.9 1-9 2.6-11.9 2.6-9.7 0-15.8-7.7-15.8-15.8 0-10.3 6.1-15.2 13.6-16.8 81.9-18.1 165.6-16.5 237 26.2 6.1 3.9 9.7 7.4 9.7 16.5s-7.1 15.4-15.2 15.4zm26.9-65.6c-5.2 0-8.7-2.3-12.3-4.2-62.5-37-155.7-51.9-238.6-29.4-4.8 1.3-7.4 2.6-11.9 2.6-10.7 0-19.4-8.7-19.4-19.4s5.2-17.8 15.5-20.7c27.8-7.8 56.2-13.6 97.8-13.6 64.9 0 127.6 16.1 177 45.5 8.1 4.8 11.3 11 11.3 19.7-.1 10.8-8.5 19.5-19.4 19.5zm31-76.2c-5.2 0-8.4-1.3-12.9-3.9-71.2-42.5-198.5-52.7-280.9-29.7-3.6 1-8.1 2.6-12.9 2.6-13.2 0-23.3-10.3-23.3-23.6 0-13.6 8.4-21.3 17.4-23.9 35.2-10.3 74.6-15.2 117.5-15.2 73 0 149.5 15.2 205.4 47.8 7.8 4.5 12.9 10.7 12.9 22.6 0 13.6-11 23.3-23.2 23.3z"/></svg>',
+  apple: '<svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>',
+  youtube: '<svg viewBox="0 0 576 512"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>',
+  tiktok: '<svg viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></svg>',
+  deezer: '<svg viewBox="0 0 576 512"><path d="M451.46,244.71H576V172H451.46Zm0,149.28H576V321.28H451.46Zm0-74.64H576V246.64H451.46ZM0,393.99H124.54V321.28H0Zm150.47,0H275V321.28H150.47Zm150.52,0H425.53V321.28H301Zm150.47-74.64H576V246.64H451.46ZM301,244.71H425.53V172H301ZM150.47,319.35H275V246.64H150.47ZM301,319.35H425.53V246.64H301ZM451.46,94.1H576V21.39H451.46ZM301,170.07H425.53V97.36H301Z"/></svg>',
+  tidal: '<svg viewBox="0 0 512 512"><path d="M256 96l-96 96 96 96-96 96-96-96 96-96-96-96L256 0l96 96-96 96zm160-96l-96 96 96 96 96-96z"/></svg>',
+  amazon: '<svg viewBox="0 0 448 512"><path d="M257.2 162.7c-48.7 1.8-169.5 15.5-169.5 117.5 0 109.5 138.3 114 183.5 43.2 6.5 10.2 35.4 37.5 45.3 46.8l56.8-56S341 288.9 341 261.4V114.3C341 89 316.5 32 228.7 32 140.7 32 94 87 94 136.3l73.5 6.8c16.3-49.5 54.2-49.5 54.2-49.5 40.7-.1 40.7 35.4 35.5 69.1zM257.2 245s-16.3 25-53 25c-30.5 0-30.5-25.3-30.5-29.3 0-30.5 16.3-46.1 53.2-49.7 36.8-3.6 30.5 0 30.5 0v54zm158 251.3c-13.5 3.2-5.3-3.6-5.3-3.6-54.5-42-74.6-64.3-79.6-74.1-49.5 63.8-159.6 97.8-229.4 50.3C-7 400.5 15.4 327.9 15.4 327.9c-1.8 3.6 0 7.3 0 7.3C71.2 445 170 391.4 208.7 375.6c34.3-17.7 49.3-22.2 84.3-59.4 7.3-7.3 12.1-14.5 12.1-14.5l.2.4c2.5 3.5 4.6 6.8 37.4 36.5 22.5 20.3 74 52 74 52z"/></svg>',
+  shazam: '<svg viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm113.7 300.3c-32.9 32.9-86.8 32.9-119.7 0-11.4-11.4-19.7-25.4-24.4-40.8-1.7-5.6 1.4-11.5 7-13.2 5.6-1.7 11.5 1.4 13.2 7 3.5 11.5 9.7 21.9 18.2 30.4 24.6 24.6 64.5 24.6 89.1 0 24.6-24.6 24.6-64.5 0-89.1-24.6-24.6-64.5-24.6-89.1 0-7.8 7.8-13.5 17.2-17.1 27-1.7 4.7-6.9 7.2-11.6 5.5-4.7-1.7-7.2-6.9-5.5-11.6 4.7-12.8 12.1-24.9 22.2-35 32.9-32.9 86.8-32.9 119.7 0 32.9 32.9 32.9 86.8 0 119.7h0zm-39.9-129.8c-7.8-7.8-17.2-13.5-27-17.1-4.7-1.7-7.2-6.9-5.5-11.6 1.7-4.7 6.9-7.2 11.6-5.5 12.8 4.7 24.9 12.1 35 22.2 32.9 32.9 32.9 86.8 0 119.7-32.9 32.9-86.8 32.9-119.7 0-11.4-11.4-19.7-25.4-24.4-40.8-1.7-5.6 1.4-11.5 7-13.2 5.6-1.7 11.5 1.4 13.2 7 3.5 11.5 9.7 21.9 18.2 30.4 24.6 24.6 64.5 24.6 89.1 0 24.5-24.6 24.5-64.5-.5-89.1z"/></svg>'
+};
+
+let _built = false;
+let _refs = {};
+
+function initLayout(config) {
+  const { width, height, settings, artworkUrl, trackTitle, artistName } = config;
+  const canvas = document.getElementById('canvas');
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  canvas.innerHTML = '';
+
+  if (settings.backgroundType === 'solid') {
+    canvas.style.background = settings.solidColor;
+  } else if (settings.backgroundType === 'gradient') {
+    canvas.style.background = 'linear-gradient(135deg, ' + settings.gradientColor1 + ', ' + settings.gradientColor2 + ')';
+  } else {
+    canvas.style.background = '#000';
+  }
+
+  _refs = {};
+
+  if (settings.backgroundType === 'blurred' && artworkUrl) {
+    const bgDiv = document.createElement('div');
+    bgDiv.className = 'bg-blurred';
+    const bgImg = document.createElement('img');
+    bgImg.src = artworkUrl;
+    bgDiv.appendChild(bgImg);
+    canvas.appendChild(bgDiv);
+  }
+
+  const isLandscape = settings.format === 'landscape';
+  const isPromoLandscape = isLandscape && settings.template === 'promo-card';
+  const coverSize = Math.min(width, height) * (isPromoLandscape ? 0.75 : settings.template === 'promo-card' ? 0.7 : isLandscape ? 0.65 : 0.45);
+
+  if (settings.template === 'glow-player') {
+    buildGlowPlayer(canvas, { width, height, artworkUrl, trackTitle, artistName, coverSize, settings });
+  } else {
+    buildPromoCard(canvas, { width, height, artworkUrl, trackTitle, artistName, coverSize, settings });
+  }
+
+  _built = true;
+}
+
+function buildGlowPlayer(canvas, opts) {
+  const { width, height, artworkUrl, artistName, trackTitle, coverSize, settings } = opts;
+  const isLandscape = settings.format === 'landscape';
+
+  const container = document.createElement('div');
+  container.className = 'glow-container';
+  _refs.contentContainer = container;
+  if (isLandscape) {
+    container.style.flexDirection = 'row';
+    container.style.gap = '5%';
+    container.style.paddingLeft = '8%';
+    container.style.paddingRight = '8%';
+  }
+
+  if (artworkUrl) {
+    const coverWrapper = document.createElement('div');
+    coverWrapper.className = 'cover-wrapper';
+    coverWrapper.style.width = coverSize + 'px';
+    coverWrapper.style.height = coverSize + 'px';
+    _refs.coverWrapper = coverWrapper;
+
+    const glow = document.createElement('div');
+    glow.className = 'cover-glow';
+    glow.style.backgroundImage = 'url(' + artworkUrl + ')';
+    _refs.glow = glow;
+    coverWrapper.appendChild(glow);
+
+    const img = document.createElement('img');
+    img.className = 'cover-image';
+    img.src = artworkUrl;
+    _refs.coverImg = img;
+    coverWrapper.appendChild(img);
+
+    container.appendChild(coverWrapper);
+  }
+
+  const widget = document.createElement('div');
+  widget.className = 'player-widget';
+  widget.style.width = isLandscape ? (coverSize * 1.1) + 'px' : (coverSize * 0.9) + 'px';
+  widget.style.gap = (height * 0.01) + 'px';
+  if (isLandscape) {
+    widget.style.alignItems = 'flex-start';
+  }
+
+  const artist = document.createElement('p');
+  artist.className = 'player-artist';
+  artist.style.fontSize = Math.max(14, width * 0.035) + 'px';
+  if (isLandscape) artist.style.textAlign = 'left';
+  artist.textContent = artistName;
+  widget.appendChild(artist);
+
+  const track = document.createElement('p');
+  track.className = 'player-track';
+  track.style.fontSize = Math.max(12, width * 0.028) + 'px';
+  if (isLandscape) track.style.textAlign = 'left';
+  track.textContent = trackTitle;
+  widget.appendChild(track);
+
+  const bar = document.createElement('div');
+  bar.className = 'progress-bar';
+  bar.style.height = Math.max(3, height * 0.004) + 'px';
+  const fill = document.createElement('div');
+  fill.className = 'progress-fill';
+  _refs.progressFill = fill;
+  bar.appendChild(fill);
+  widget.appendChild(bar);
+
+  const controls = document.createElement('div');
+  controls.className = 'player-controls';
+  controls.style.justifyContent = 'center';
+  controls.style.width = '100%';
+  controls.style.gap = '10%';
+  const iconSz = Math.max(12, width * 0.04);
+  controls.innerHTML = ''
+    + '<svg width="' + (iconSz*0.7) + '" height="' + (iconSz*0.7) + '" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" transform="scale(-1,1) translate(-24,0)"/></svg>'
+    + '<svg width="' + (iconSz*0.6) + '" height="' + (iconSz*0.6) + '" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>'
+    + '<svg width="' + iconSz + '" height="' + iconSz + '" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>'
+    + '<svg width="' + (iconSz*0.6) + '" height="' + (iconSz*0.6) + '" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>'
+    + '<svg width="' + (iconSz*0.7) + '" height="' + (iconSz*0.7) + '" viewBox="0 0 24 24" fill="white" opacity="0.5"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>';
+  widget.appendChild(controls);
+
+  container.appendChild(widget);
+  canvas.appendChild(container);
+}
+
+function buildPromoCard(canvas, opts) {
+  const { width, height, artworkUrl, trackTitle, coverSize, settings } = opts;
+  const titleText = settings.promoTitle || trackTitle;
+  const taglineText = settings.tagline || 'NEW MUSIC';
+  const isLandscape = settings.format === 'landscape';
+
+  const container = document.createElement('div');
+  container.className = 'promo-container' + (isLandscape ? ' promo-landscape' : '');
+  _refs.contentContainer = container;
+
+  const coverArea = document.createElement('div');
+  coverArea.className = 'promo-cover-area';
+
+  if (artworkUrl) {
+    if (isLandscape) {
+      const glow = document.createElement('div');
+      glow.className = 'promo-cover-glow';
+      glow.style.backgroundImage = 'url(' + artworkUrl + ')';
+      coverArea.appendChild(glow);
+    }
+    const img = document.createElement('img');
+    img.className = 'promo-cover-image';
+    img.src = artworkUrl;
+    img.style.width = coverSize + 'px';
+    img.style.height = coverSize + 'px';
+    _refs.promoCoverImg = img;
+    coverArea.appendChild(img);
+  }
+  container.appendChild(coverArea);
+
+  if (isLandscape) {
+    const rightSide = document.createElement('div');
+    rightSide.className = 'promo-text';
+
+    if (settings.taglineColor !== 'none') {
+      const tagline = document.createElement('p');
+      tagline.className = 'promo-tagline';
+      tagline.style.fontSize = Math.max(14, width * 0.022) + 'px';
+      tagline.style.color = settings.taglineColor;
+      tagline.style.opacity = '0.85';
+      tagline.style.marginBottom = (height * 0.02) + 'px';
+      tagline.textContent = taglineText;
+      rightSide.appendChild(tagline);
+    }
+
+    if (settings.promoTitleColor !== 'none') {
+      const title = document.createElement('p');
+      title.className = 'promo-title';
+      title.style.fontSize = Math.max(20, width * 0.055) + 'px';
+      title.style.color = settings.promoTitleColor;
+      title.style.marginBottom = (height * 0.04) + 'px';
+      title.textContent = titleText;
+      rightSide.appendChild(title);
+    }
+
+    if (settings.storeIcons && settings.storeIcons.length > 0) {
+      const storesDiv = document.createElement('div');
+      storesDiv.className = 'promo-stores';
+      storesDiv.style.display = 'flex';
+      storesDiv.style.alignItems = 'center';
+      storesDiv.style.gap = (width * 0.02) + 'px';
+      const iconSize = Math.max(20, width * 0.035);
+      settings.storeIcons.forEach(function(iconId) {
+        if (STORE_SVGS[iconId]) {
+          const span = document.createElement('span');
+          span.className = 'store-icon';
+          span.style.color = settings.storeIconStyle || 'white';
+          span.style.width = iconSize + 'px';
+          span.style.height = iconSize + 'px';
+          span.innerHTML = STORE_SVGS[iconId];
+          storesDiv.appendChild(span);
+        }
+      });
+      rightSide.appendChild(storesDiv);
+    }
+
+    container.appendChild(rightSide);
+  } else {
+    const textDiv = document.createElement('div');
+    textDiv.className = 'promo-text';
+
+    if (settings.taglineColor !== 'none') {
+      const tagline = document.createElement('p');
+      tagline.className = 'promo-tagline';
+      tagline.style.fontSize = Math.max(12, width * 0.025) + 'px';
+      tagline.style.color = settings.taglineColor;
+      tagline.textContent = taglineText;
+      textDiv.appendChild(tagline);
+    }
+
+    if (settings.promoTitleColor !== 'none') {
+      const title = document.createElement('p');
+      title.className = 'promo-title';
+      title.style.fontSize = Math.max(16, width * 0.06) + 'px';
+      title.style.color = settings.promoTitleColor;
+      title.textContent = titleText;
+      textDiv.appendChild(title);
+    }
+
+    container.appendChild(textDiv);
+
+    if (settings.storeIcons && settings.storeIcons.length > 0) {
+      const storesDiv = document.createElement('div');
+      storesDiv.className = 'promo-stores';
+      const iconSize = Math.max(16, width * 0.04);
+      settings.storeIcons.forEach(function(iconId) {
+        if (STORE_SVGS[iconId]) {
+          const span = document.createElement('span');
+          span.className = 'store-icon';
+          span.style.color = settings.storeIconStyle || 'white';
+          span.style.width = iconSize + 'px';
+          span.style.height = iconSize + 'px';
+          span.innerHTML = STORE_SVGS[iconId];
+          storesDiv.appendChild(span);
+        }
+      });
+      container.appendChild(storesDiv);
+    }
+  }
+
+  canvas.appendChild(container);
+}
+
+function updateFrame(progress, duration) {
+  var totalDur = duration || 30;
+  var elapsed = progress * totalDur;
+  var zoomT = Math.min(1, elapsed / 1.0);
+  var zoomScale = 0.85 + 0.15 * zoomT;
+  var zoomOpacity = 0.6 + 0.4 * zoomT;
+
+  if (_refs.contentContainer) {
+    _refs.contentContainer.style.transform = 'scale(' + zoomScale + ')';
+    _refs.contentContainer.style.opacity = zoomOpacity;
+  }
+
+  if (_refs.coverImg) {
+    var floatOffset = Math.sin(progress * Math.PI * 2) * 8;
+    _refs.coverImg.style.transform = 'translateY(' + (-floatOffset) + 'px)';
+  }
+  if (_refs.glow) {
+    _refs.glow.style.transform = 'scale(1.3)';
+  }
+  if (_refs.progressFill) {
+    _refs.progressFill.style.width = (progress * 100) + '%';
+  }
+  if (_refs.promoCoverImg) {
+    var scaleAnim = 0.95 + 0.05 * Math.min(1, progress * 3);
+    _refs.promoCoverImg.style.transform = 'scale(' + scaleAnim + ')';
+  }
+}
+
+window.initLayout = initLayout;
+window.updateFrame = updateFrame;
+window.__ready = true;
+</script>
+</body>
+</html>
