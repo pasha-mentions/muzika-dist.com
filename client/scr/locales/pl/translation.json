@@ -1,0 +1,149 @@
+{
+  "nav": {
+    "dashboard": "Pulpit",
+    "catalog": "Katalog",
+    "newRelease": "Nowe wydanie",
+    "pitching": "Pitching",
+    "reports": "Raporty",
+    "analytics": "Szybka analityka",
+    "admin": "Admin",
+    "settings": "Ustawienia"
+  },
+  "analytics": {
+    "title": "Szybka analityka",
+    "description": "Śledź wzrost obserwujących i metryki zaangażowania w mediach społecznościowych",
+    "spotifyFollowers": "Obserwujący Spotify",
+    "youtubeSubscribers": "Subskrybenci YouTube",
+    "followers": "Obserwujący",
+    "subscribers": "Subskrybenci",
+    "noData": "Brak dostępnych danych",
+    "noDataDesc": "Skonfiguruj adresy URL mediów społecznościowych w ustawieniach organizacji, aby rozpocząć śledzenie metryk",
+    "loading": "Ładowanie analityki...",
+    "growth": "Wzrost",
+    "error": "Błąd ładowania analityki",
+    "errorDesc": "Nie udało się załadować statystyk mediów społecznościowych. Spróbuj ponownie później.",
+    "refreshData": "Odśwież dane",
+    "refreshSuccess": "Dane odświeżone",
+    "refreshSuccessDesc": "Pomyślnie zaktualizowano dane dla {{count}} platform(y)",
+    "refreshError": "Błąd odświeżania",
+    "refreshErrorDesc": "Nie udało się odświeżyć danych mediów społecznościowych. Spróbuj ponownie.",
+    "lastWeek": "w zeszłym tygodniu",
+    "period": {
+      "7d": "Ostatnie 7 dni",
+      "30d": "Ostatnie 30 dni",
+      "90d": "Ostatnie 90 dni",
+      "365d": "Ostatni rok"
+    },
+    "chartTitle": "Wzrost obserwujących w czasie",
+    "currentFollowers": "Obecni obserwujący",
+    "growthMetrics": "Metryki wzrostu"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "description": "Zarządzaj ustawieniami konta i preferencjami",
+    "profile": "Profil",
+    "organization": "Organizacja",
+    "security": "Bezpieczeństwo",
+    "billing": "Płatności",
+    "notifications": "Powiadomienia",
+    "logout": "Wyloguj"
+  },
+  "common": {
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "submit": "Wyślij",
+    "loading": "Ładowanie...",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "sort": "Sortuj",
+    "actions": "Akcje",
+    "status": "Status",
+    "date": "Data",
+    "name": "Imię",
+    "email": "Email",
+    "phone": "Telefon",
+    "address": "Adres",
+    "country": "Kraj",
+    "language": "Język",
+    "timezone": "Strefa czasowa",
+    "currency": "Waluta",
+    "error": "Błąd"
+  },
+  "settings.billing": {
+    "savedPaymentDetails": "Zapisane dane płatności",
+    "savedPaymentDetailsDesc": "Zarządzaj zapisanymi danymi płatności do wypłat",
+    "noPaymentDetails": "Brak zapisanych danych płatności",
+    "addPaymentDetails": "Dodaj dane płatności",
+    "addPaymentDetailsDesc": "Dodaj nowe dane płatności do otrzymywania wypłat",
+    "recipientName": "Nazwa odbiorcy",
+    "recipientNamePlaceholder": "Pełne imię i nazwisko zgodnie z kontem bankowym",
+    "iban": "IBAN",
+    "bankName": "Nazwa banku",
+    "bankNamePlaceholder": "Nazwa banku",
+    "setAsPrimary": "Ustaw jako główny",
+    "primary": "Główny",
+    "setPrimary": "Ustaw jako główny",
+    "paymentDetailAdded": "Dodano dane płatności",
+    "paymentDetailAddedDesc": "Twoje dane płatności zostały pomyślnie zapisane",
+    "paymentDetailDeleted": "Usunięto dane płatności",
+    "paymentDetailDeletedDesc": "Twoje dane płatności zostały usunięte",
+    "primaryUpdated": "Zaktualizowano główny",
+    "primaryUpdatedDesc": "Główna metoda płatności została zaktualizowana",
+    "deleteConfirmTitle": "Czy jesteś pewien?",
+    "deleteConfirmDesc": "To na stałe usunie te dane płatności. Tej czynności nie można cofnąć.",
+    "fillAllFields": "Proszę wypełnić wszystkie wymagane pola"
+  },
+  "finance": {
+    "requestedBy": "Żądane przez",
+    "taxId": "NIP",
+    "mainRecipientDetails": "Dane głównego odbiorcy",
+    "recipient": "Odbiorca",
+    "iban": "IBAN",
+    "bank": "Bank",
+    "percentage": "Procent",
+    "royaltySplits": "Podział tantiem",
+    "serviceTypes": {
+      "single": "Singiel",
+      "album": "Album",
+      "video": "Teledysk",
+      "youtubeAds": "YouTube Ads"
+    }
+  },
+  "dashboard": {
+    "upcomingReleases": {
+      "title": "Nadchodzące wydania",
+      "preRelease": "Pre-release",
+      "releaseTimeTooltip": "Czas wydania w Twojej strefie czasowej",
+      "pitchingSubmitted": "Zgłoszono do pitchingu",
+      "submitPitching": "Zgłoś do pitchingu",
+      "timer": {
+        "days": "Dni",
+        "hours": "Godzin",
+        "mins": "Minut",
+        "secs": "Sekund"
+      },
+      "checklist": {
+        "title": "Lista kontrolna przed wydaniem",
+        "subtitle": "Upewnij się, że Twoje wydanie dotrze do jak największej liczby słuchaczy.",
+        "pitch": "Zgłoś swoją muzykę",
+        "pitchDone": "Zgłosiłeś swoją muzykę",
+        "pitchPending": "Zgłoś do rozpatrzenia w playlistach redakcyjnych",
+        "presave": "Pre-save",
+        "presaveReady": "Link Pre-save jest gotowy",
+        "presavePending": "Pre-save zostanie wygenerowany wkrótce",
+        "copied": "Skopiowano!",
+        "copyLink": "Kopiuj link"
+      }
+    }
+  },
+  "releaseTypes": {
+    "single": "Singiel",
+    "ep": "EP",
+    "album": "Album",
+    "musicVideo": "Teledysk"
+  }
+}

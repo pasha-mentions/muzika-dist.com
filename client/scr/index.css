@@ -1,0 +1,463 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+:root {
+  --background: hsl(0, 0%, 8%); /* #141414 */
+  --foreground: hsl(0, 0%, 100%); /* білий текст */
+  --card: hsl(0, 0%, 12%); /* #1e1f1f */
+  --card-foreground: hsl(0, 0%, 100%); /* білий текст */
+  --popover: hsl(0, 0%, 12%); /* #1e1f1f */
+  --popover-foreground: hsl(0, 0%, 100%); /* білий текст */
+  --primary: hsl(284, 54%, 52%); /* #8f4dbe - фіолетовий виділений текст */
+  --primary-foreground: hsl(210, 40%, 98%);
+  --secondary: hsl(0, 0%, 15%);
+  --secondary-foreground: hsl(0, 0%, 100%); /* білий текст */
+  --muted: hsl(0, 0%, 15%);
+  --muted-foreground: hsl(215, 16%, 65%);
+  --accent: hsl(142, 76%, 36%);
+  --accent-foreground: hsl(355, 7%, 97%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(0, 0%, 20%);
+  --input: hsl(0, 0%, 20%);
+  --ring: hsl(221, 83%, 53%);
+  --chart-1: hsl(142, 76%, 36%);
+  --chart-2: hsl(221, 83%, 53%);
+  --chart-3: hsl(45, 93%, 47%);
+  --chart-4: hsl(280, 100%, 70%);
+  --chart-5: hsl(340, 75%, 55%);
+  --sidebar: hsl(0, 0%, 8%); /* темний фон сайдбару */
+  --sidebar-foreground: hsl(0, 0%, 100%); /* білий текст */
+  --sidebar-primary: hsl(284, 54%, 52%); /* #8f4dbe фіолетовий */
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(0, 0%, 15%); /* темний акцент */
+  --sidebar-accent-foreground: hsl(284, 54%, 52%); /* #8f4dbe для активної вкладки */
+  --sidebar-border: hsl(0, 0%, 20%); /* темний бордер */
+  --sidebar-ring: hsl(284, 54%, 52%); /* #8f4dbe кільце */
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 8px;
+}
+
+.dark {
+  --background: hsl(222, 84%, 4%);
+  --foreground: hsl(210, 40%, 98%);
+  --card: hsl(222, 84%, 4%);
+  --card-foreground: hsl(210, 40%, 98%);
+  --popover: hsl(222, 84%, 4%);
+  --popover-foreground: hsl(210, 40%, 98%);
+  --primary: hsl(217, 91%, 60%);
+  --primary-foreground: hsl(222, 84%, 4%);
+  --secondary: hsl(217, 32%, 17%);
+  --secondary-foreground: hsl(210, 40%, 98%);
+  --muted: hsl(217, 32%, 17%);
+  --muted-foreground: hsl(215, 20%, 65%);
+  --accent: hsl(142, 69%, 58%);
+  --accent-foreground: hsl(222, 84%, 4%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --border: hsl(217, 32%, 17%);
+  --input: hsl(217, 32%, 17%);
+  --ring: hsl(224, 71%, 4%);
+  --sidebar: hsl(228, 9.8039%, 10%);
+  --sidebar-foreground: hsl(0, 0%, 85.0980%);
+  --sidebar-primary: hsl(217, 91%, 60%);
+  --sidebar-primary-foreground: hsl(222, 84%, 4%);
+  --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
+  --sidebar-accent-foreground: hsl(217, 91%, 60%);
+  --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
+  --sidebar-ring: hsl(217, 91%, 60%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Chart container styles for better rendering */
+.recharts-wrapper {
+  @apply w-full;
+}
+
+/* Custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground opacity-30 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground opacity-50;
+}
+
+/* File upload drag and drop styles */
+.upload-zone-hover {
+  @apply border-primary border-opacity-50 bg-primary bg-opacity-5;
+}
+
+/* Progress bar animations */
+@keyframes progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-value);
+  }
+}
+
+.progress-animated {
+  animation: progress-fill 0.5s ease-out;
+}
+
+/* Badge variants for status indicators */
+.badge-status-delivered {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300;
+}
+
+.badge-status-delivering {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300;
+}
+
+.badge-status-approved {
+  @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300;
+}
+
+.badge-status-in-review {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300;
+}
+
+.badge-status-rejected {
+  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300;
+}
+
+.badge-status-draft {
+  @apply bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300;
+}
+
+/* Gradient backgrounds for artwork placeholders */
+.gradient-1 {
+  background: linear-gradient(135deg, hsl(var(--chart-1)) 0%, hsl(var(--chart-2)) 100%);
+}
+
+.gradient-2 {
+  background: linear-gradient(135deg, hsl(var(--chart-3)) 0%, hsl(var(--chart-4)) 100%);
+}
+
+.gradient-3 {
+  background: linear-gradient(135deg, hsl(var(--chart-5)) 0%, hsl(var(--chart-1)) 100%);
+}
+
+.gradient-4 {
+  background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+}
+
+/* Hover effects for interactive elements */
+.hover-lift {
+  @apply transition-transform duration-200 ease-out;
+}
+
+.hover-lift:hover {
+  @apply transform -translate-y-1;
+}
+
+/* Loading spinner styles */
+.spinner {
+  @apply animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full;
+}
+
+/* Form validation styles */
+.form-error {
+  @apply text-destructive text-xs mt-1;
+}
+
+.form-success {
+  @apply text-green-600 text-xs mt-1;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .mobile-stack {
+    @apply flex-col space-y-2 space-x-0;
+  }
+  
+  .mobile-full {
+    @apply w-full;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+}
+
+/* Custom button styles for specific contexts */
+.btn-approve {
+  @apply text-green-600 border-green-200 hover:bg-green-50 dark:hover:bg-green-950;
+}
+
+.btn-reject {
+  @apply text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-950;
+}
+
+/* Audio waveform placeholder styles */
+.waveform-placeholder {
+  @apply flex items-center justify-center bg-muted bg-opacity-50 rounded h-12;
+}
+
+.waveform-bar {
+  @apply bg-primary bg-opacity-60 rounded-full mx-px;
+  animation: waveform 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes waveform {
+  0% { height: 4px; }
+  100% { height: 100%; }
+}
+
+.waveform-bar:nth-child(2n) {
+  animation-delay: 0.1s;
+}
+
+.waveform-bar:nth-child(3n) {
+  animation-delay: 0.2s;
+}
+
+/* Revenue chart styles */
+.revenue-chart {
+  @apply w-full h-64;
+}
+
+.chart-bar {
+  @apply bg-primary rounded-t transition-all duration-300 hover:bg-primary hover:bg-opacity-80;
+}
+
+/* File type icons */
+.file-icon-audio::before {
+  content: "🎵";
+  @apply text-lg;
+}
+
+.file-icon-image::before {
+  content: "🖼️";
+  @apply text-lg;
+}
+
+/* Toast notification styles */
+.toast-success {
+  @apply border-green-200 bg-green-50 text-green-800;
+}
+
+.toast-error {
+  @apply border-red-200 bg-red-50 text-red-800;
+}
+
+.toast-warning {
+  @apply border-yellow-200 bg-yellow-50 text-yellow-800;
+}
+
+/* Platform status indicators */
+.status-online {
+  @apply bg-green-500;
+}
+
+.status-degraded {
+  @apply bg-yellow-500;
+}
+
+.status-offline {
+  @apply bg-red-500;
+}
+
+/* QC validation styles */
+.qc-info {
+  @apply border-blue-200 bg-blue-50 text-blue-800;
+}
+
+.qc-warning {
+  @apply border-yellow-200 bg-yellow-50 text-yellow-800;
+}
+
+.qc-error {
+  @apply border-red-200 bg-red-50 text-red-800;
+}
+
+/* Artwork validation checklist */
+.validation-check {
+  @apply flex items-center text-xs space-x-2;
+}
+
+.validation-check.valid {
+  @apply text-green-600;
+}
+
+.validation-check.invalid {
+  @apply text-red-600;
+}
+
+.validation-check.pending {
+  @apply text-gray-500;
+}
+
+/* Release status timeline animations */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(100%);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 4px 1px hsl(var(--primary) / 0.3);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px hsl(var(--primary) / 0.5);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+/* Wayforpay widget overlay - ensure it appears above all elements and receives pointer events */
+.wayforpay-widget-wrapper,
+iframe[src*="wayforpay"],
+iframe[src*="secure.wayforpay"],
+iframe[id*="wayforpay"],
+.wayforpay-popup,
+div[class*="wayforpay"],
+iframe[name="wayforpay"] {
+  z-index: 2147483647 !important;
+  position: fixed !important;
+  pointer-events: auto !important;
+}
+
+/* Wayforpay overlay background */
+.wayforpay-popup-overlay {
+  z-index: 2147483646 !important;
+  position: fixed !important;
+  pointer-events: auto !important;
+}
+
+/* Wayforpay creates an iframe in the body - ensure it's on top */
+body > iframe[src*="wayforpay"],
+body > iframe[src*="secure.wayforpay.com"],
+body > div > iframe[src*="wayforpay"] {
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+/* TipTap Rich Text Editor */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: hsl(var(--muted-foreground));
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  display: block;
+}
+
+.tiptap img.ProseMirror-selectednode {
+  outline: 2px solid hsl(var(--primary));
+  border-radius: 0.5rem;
+}
+
+.tiptap blockquote {
+  border-left: 3px solid hsl(var(--primary));
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 1.5rem 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.tiptap ul {
+  list-style-type: disc;
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+}
+
+.tiptap li {
+  margin: 0.25rem 0;
+}
+
+.tiptap pre {
+  background: hsl(var(--muted));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+.tiptap code {
+  background: hsl(var(--muted));
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.3rem;
+  font-size: 0.875em;
+}
+
+.tiptap h1 { font-size: 2em; font-weight: 700; margin: 1rem 0 0.5rem; }
+.tiptap h2 { font-size: 1.5em; font-weight: 700; margin: 1rem 0 0.5rem; }
+.tiptap h3 { font-size: 1.25em; font-weight: 600; margin: 0.75rem 0 0.5rem; }
+.tiptap h4 { font-size: 1.1em; font-weight: 600; margin: 0.75rem 0 0.5rem; }
+
+.tiptap a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+  cursor: pointer;
+}

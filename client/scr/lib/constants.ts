@@ -1,0 +1,40 @@
+export const PLAYLIST_GENRES = [
+  "Pop",
+  "Electro-pop",
+  "Indie-pop",
+  "Hip-Hop",
+  "R&B",
+  "Rock",
+  "Pop-rock",
+  "Electronic",
+  "Dance",
+  "Indie",
+  "Alternative",
+  "Jazz",
+  "Classical",
+  "Country",
+  "Folk",
+  "Metal",
+  "Punk",
+  "Reggae",
+  "Latin",
+  "K-Pop",
+  "Lo-Fi",
+  "Ambient",
+  "Soul",
+] as const;
+
+export type PlaylistGenre = typeof PLAYLIST_GENRES[number];
+
+export const PITCHING_REJECTION_REASONS = [
+  "GENRE_MISMATCH",
+  "LOW_QUALITY",
+  "NOT_FITTING_PLAYLIST_STYLE",
+  "INCOMPLETE_PROFILE",
+  "INSUFFICIENT_STREAMING_STATS",
+  "CURATOR_PREFERENCE",
+  "RELEASE_TOO_OLD",
+  "OTHER",
+] as const;
+
+export type PitchingRejectionReason = typeof PITCHING_REJECTION_REASONS[number];
